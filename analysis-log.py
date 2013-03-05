@@ -1,17 +1,37 @@
 #!/usr/bin/env python
-#-*-coding:UTF-8-*-
+#-*- coding: UTF-8 -*-
 
 import re
 
-for line in file('./test.log'):
-    OriginalLogLine = line.strip()
-    AccessTime = OriginalLogLine.split(' ')[1:3]
-    AccessTimeDate = AccessTime[0]
-    AccessTimeHour = AccessTime[1].split(':')[0]
-    AccessTimeMinute = AccessTime[1].split(':')[1]
-    AccessTimeSecond = AccessTime[1].split(':')[2]
-    QueryWord = OriginalLogLine.split(' ty=')[0]
-    print QueryWord
-    #QueryWord = re.findall('^NOTICE: (/d+)-(/d+).*w\[(.*)\].*$',OriginalLogLine,output)
-    #QueryWord = QueryWord.split(' ')[8:].strip('w[]')
-    #QueryWord.group() 
+dict = {}
+pattern = (r'^NOTICE: (\d+)-(\d+) (\d+):(\d+):(\d+).*w\[(.*)\] (.*)')
+regex = re.compile(pattern)
+pv_sum = 0
+hc_sum = 0
+nhc_sum = 0
+for line in open('./test.log'):
+    if line.startswith('NOTICE:'):
+        text = line
+        match = regex.search(text)
+        if match != None :
+            dict['month'] = match.group(1)
+            dict['day'] = match.group(2)
+            dict['hour'] = match.group(3)
+            dict['minute'] = match.group(4)
+            dict['second'] = match.group(5)
+            dict['word'] = match.group(6)
+            for seg in match.group(7).split(' '):
+                k, j = seg.split('=')
+                dict[k] = j
+            print 'Query word is: ' + dict['word']
+    
+        # 计数器
+        pv_sum = pv_sum + 1
+        if dict['hc'] == "1":
+            hc_sum = hc_sum + 1
+        else:
+            nhc_sum = nhc_sum + 1
+
+
+# 输出计数器
+print "Total PV: %d, Cache hit: %d, Cache miss: %d." % (pv_sum, hc_sum, nhc_sum)
