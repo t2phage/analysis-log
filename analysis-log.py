@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#-*- coding: UTF-8 -*-
+#-*-coding:UTF-8-*-
 
 import re
 
@@ -31,7 +31,6 @@ for line in open('./test.log'):
             hc_sum = hc_sum + 1
         else:
             nhc_sum = nhc_sum + 1
-
 
 # Êä³ö¼ÆÊýÆ÷
 print "Total PV: %d, Cache hit: %d, Cache miss: %d." % (pv_sum, hc_sum, nhc_sum)
